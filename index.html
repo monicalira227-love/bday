@@ -391,17 +391,6 @@
       font-weight: 800;
     }
 
-    .music-label {
-      color: #9caec8;
-      font-size: 10px;
-      letter-spacing: 1px;
-      margin-top: 18px;
-    }
-
-    .music-label span {
-      color: var(--yellow);
-    }
-
     .podium-title {
       font-size: clamp(35px, 9vw, 70px);
       margin: 15px 0;
@@ -471,25 +460,6 @@
       }
     }
 
-    .music-control {
-      position: fixed;
-      z-index: 20;
-      bottom: 18px;
-      right: 18px;
-      border: 1px solid rgba(255,255,255,.2);
-      background: rgba(7,19,41,.92);
-      color: white;
-      border-radius: 30px;
-      padding: 10px 13px;
-      font-size: 11px;
-      cursor: pointer;
-      display: none;
-    }
-
-    .music-control.visible {
-      display: block;
-    }
-
     @media (max-width: 480px) {
       .screen {
         padding: 24px 17px;
@@ -521,20 +491,6 @@
 
 <body>
 
-  <audio id="birthdayMusic" loop preload="auto">
-    <source src="center-mass.mp3" type="audio/mpeg">
-  </audio>
-
-  <button
-    class="music-control"
-    id="musicControl"
-    type="button"
-    onclick="toggleMusic()"
-    aria-label="Activar o pausar música"
-  >
-    ♪ MUSIC ON
-  </button>
-
   <section class="screen active" id="intro">
     <div class="content">
       <p class="eyebrow">Red Bull Racing · Special transmission</p>
@@ -562,10 +518,6 @@
       <button class="button" id="startButton" onclick="startRace()">
         START YOUR ENGINES →
       </button>
-
-      <div class="music-label">
-        SOUNDTRACK: <span>TWENTY ONE PILOTS · CENTER MASS</span>
-      </div>
     </div>
 
     <div class="stripe"></div>
@@ -580,7 +532,7 @@
 
       <div class="badge">
         <span class="badge-dot"></span>
-        CADA DÍA MÁS VIEJITO
+        MAX VERSTAPPEN FAN CLUB
       </div>
 
       <h2 class="birthday-title">
@@ -607,7 +559,7 @@
         <p class="message-label">A NOTE FOR YOU / 22.0</p>
 
         <p class="message">
-          Georgeee, happy birthday<br><br>
+          Georgeee, happy birthday!!<br><br>
 
           Espero que hoy te la pases muy bonito y que este
           nuevo año venga lleno de cosas buenas, muchas
@@ -634,17 +586,13 @@
           motivos para sonreír y un montón de sueños por cumplir.<br><br>
 
           <strong>
-            Disfruta mucho tu día.<br>
+            Disfruta mucho tu día, George.<br>
             Sigue siendo el más veloz, igual que Max.
           </strong><br><br>
 
           <span class="signoff">Twins, forever.</span>
         </p>
       </div>
-
-      <p class="music-label">
-        NOW PLAYING: <span>TWENTY ONE PILOTS — CENTER MASS</span>
-      </p>
 
       <button class="button red-button" onclick="celebrate()">
         TAKE THE PODIUM →
@@ -691,9 +639,6 @@
   </section>
 
   <script>
-    const music = document.getElementById("birthdayMusic");
-    const musicControl = document.getElementById("musicControl");
-    let musicIsPlaying = false;
     let raceStarted = false;
 
     function showScreen(screenId) {
@@ -705,26 +650,10 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    async function playMusic() {
-      music.volume = 0.35;
-
-      try {
-        await music.play();
-        musicIsPlaying = true;
-        musicControl.textContent = "♪ MUSIC ON";
-      } catch (error) {
-        musicIsPlaying = false;
-        musicControl.textContent = "♪ PLAY MUSIC";
-      }
-
-      musicControl.classList.add("visible");
-    }
-
     async function startRace() {
       if (raceStarted) return;
-      raceStarted = true;
 
-      playMusic();
+      raceStarted = true;
 
       const lights = document.querySelectorAll(".light");
       const startButton = document.getElementById("startButton");
@@ -740,6 +669,7 @@
       await new Promise(resolve => setTimeout(resolve, 550));
 
       showScreen("birthday");
+
       startButton.disabled = false;
       startButton.textContent = "START YOUR ENGINES →";
     }
@@ -758,16 +688,6 @@
       showScreen("intro");
     }
 
-    async function toggleMusic() {
-      if (musicIsPlaying) {
-        music.pause();
-        musicIsPlaying = false;
-        musicControl.textContent = "♪ PLAY MUSIC";
-      } else {
-        await playMusic();
-      }
-    }
-
     function launchConfetti() {
       const colors = ["#ed1738", "#ffd447", "#ffffff", "#5376ad"];
 
@@ -782,18 +702,10 @@
         piece.style.transform = `rotate(${Math.random() * 360}deg)`;
 
         document.body.appendChild(piece);
+
         setTimeout(() => piece.remove(), 5500);
       }
     }
-
-    music.addEventListener("ended", () => {
-      musicIsPlaying = false;
-      musicControl.textContent = "♪ PLAY MUSIC";
-    });
-
-    music.addEventListener("error", () => {
-      musicControl.textContent = "♪ AUDIO UNAVAILABLE";
-    });
   </script>
 </body>
 </html>
