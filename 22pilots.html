@@ -1,0 +1,799 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>George | Level 22</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #071329;
+      --navy-light: #102344;
+      --red: #ed1738;
+      --yellow: #ffd447;
+      --white: #f7f8fc;
+      --muted: #a9b5c9;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: var(--navy);
+      color: var(--white);
+      font-family: "Inter", sans-serif;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .screen {
+      display: none;
+      min-height: 100vh;
+      min-height: 100svh;
+      position: relative;
+      overflow: hidden;
+      padding: 28px 20px;
+    }
+
+    .screen.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: appear .8s ease both;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .screen::before {
+      content: "";
+      position: absolute;
+      width: 380px;
+      height: 380px;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 50%;
+      top: -180px;
+      right: -130px;
+      pointer-events: none;
+    }
+
+    .screen::after {
+      content: "";
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border: 1px solid rgba(255,255,255,.05);
+      border-radius: 50%;
+      bottom: -180px;
+      left: -100px;
+      pointer-events: none;
+    }
+
+    .content {
+      width: min(100%, 760px);
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .eyebrow {
+      font-family: "Orbitron", sans-serif;
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: var(--yellow);
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    h1, h2, .number, .button {
+      font-family: "Orbitron", sans-serif;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(42px, 10vw, 90px);
+      font-weight: 900;
+      letter-spacing: -3px;
+      line-height: .98;
+    }
+
+    .red {
+      color: var(--red);
+    }
+
+    .yellow {
+      color: var(--yellow);
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 20px auto 0;
+      max-width: 420px;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .button {
+      cursor: pointer;
+      border: 0;
+      padding: 16px 24px;
+      background: var(--yellow);
+      color: var(--navy);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      transition: transform .2s, background .2s;
+      margin-top: 30px;
+      min-height: 48px;
+    }
+
+    .button:hover {
+      transform: translateY(-3px);
+      background: white;
+    }
+
+    .button.red-button {
+      background: var(--red);
+      color: white;
+    }
+
+    .tiny-note {
+      font-size: 10px;
+      color: #7888a2;
+      margin-top: 18px;
+      letter-spacing: 1px;
+    }
+
+    .lights {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 34px 0 12px;
+      padding: 13px 20px;
+      background: #020711;
+      border: 1px solid #28364e;
+      border-radius: 12px;
+    }
+
+    .light {
+      width: 22px;
+      height: 22px;
+      background: #252d3a;
+      border-radius: 50%;
+      border: 2px solid #404958;
+      transition: .2s;
+    }
+
+    .light.on {
+      background: var(--red);
+      border-color: #ff7084;
+      box-shadow: 0 0 20px var(--red);
+    }
+
+    .stripe {
+      width: 100%;
+      height: 5px;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        var(--red) 0 40%,
+        var(--yellow) 40% 60%,
+        var(--red) 60% 100%
+      );
+    }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 28px;
+      color: var(--muted);
+      font: 10px "Orbitron", sans-serif;
+      letter-spacing: 1.5px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.04);
+      font: 10px "Orbitron", sans-serif;
+      letter-spacing: 1px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 10px var(--red);
+    }
+
+    .birthday-title {
+      font-size: clamp(36px, 8vw, 65px);
+      margin: 22px 0 8px;
+    }
+
+    .age {
+      display: inline-block;
+      font: 800 clamp(45px, 12vw, 82px) "Orbitron", sans-serif;
+      color: var(--yellow);
+      line-height: 1;
+      margin: 14px 0 8px;
+      text-shadow: 0 0 35px rgba(255,212,71,.15);
+    }
+
+    .laps {
+      font: 10px "Orbitron", sans-serif;
+      letter-spacing: 3px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .car-scene {
+      width: min(100%, 470px);
+      margin: 10px auto 26px;
+      padding: 20px 10px;
+      position: relative;
+      border-top: 1px solid rgba(255,255,255,.12);
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(
+        180deg,
+        transparent,
+        rgba(237,23,56,.06),
+        transparent
+      );
+    }
+
+    .car {
+      position: relative;
+      width: 230px;
+      height: 45px;
+      margin: 12px auto 0;
+      animation: carPulse 2.5s ease-in-out infinite;
+    }
+
+    .car-body {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      top: 13px;
+      height: 19px;
+      background: var(--red);
+      clip-path: polygon(
+        0 55%, 23% 40%, 35% 0, 63% 0,
+        78% 48%, 100% 55%, 94% 100%, 7% 100%
+      );
+    }
+
+    .car-nose {
+      position: absolute;
+      width: 85px;
+      height: 6px;
+      right: -17px;
+      top: 26px;
+      background: var(--yellow);
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+    }
+
+    .car-wing {
+      position: absolute;
+      width: 50px;
+      height: 5px;
+      left: 0;
+      top: 29px;
+      background: var(--yellow);
+    }
+
+    .wheel {
+      position: absolute;
+      width: 26px;
+      height: 25px;
+      border-radius: 5px;
+      background: #03060b;
+      border: 3px solid #788397;
+      bottom: 0;
+    }
+
+    .wheel.left {
+      left: 38px;
+    }
+
+    .wheel.right {
+      right: 38px;
+    }
+
+    .halo {
+      position: absolute;
+      top: 0;
+      left: 96px;
+      width: 38px;
+      height: 19px;
+      border: 4px solid var(--yellow);
+      border-bottom: 0;
+      border-radius: 20px 20px 0 0;
+    }
+
+    @keyframes carPulse {
+      0%, 100% {
+        transform: translateX(-3px);
+      }
+      50% {
+        transform: translateX(3px);
+      }
+    }
+
+    .message-card {
+      text-align: left;
+      padding: clamp(20px, 5vw, 34px);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.035);
+      position: relative;
+    }
+
+    .message-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background: var(--red);
+    }
+
+    .message-label {
+      font: 10px "Orbitron", sans-serif;
+      letter-spacing: 3px;
+      color: var(--yellow);
+      margin-bottom: 22px;
+    }
+
+    .message {
+      font-size: 14px;
+      line-height: 1.95;
+      color: #dce3ef;
+    }
+
+    .message strong {
+      color: white;
+      font-weight: 800;
+    }
+
+    .message .signoff {
+      color: var(--yellow);
+      font-weight: 800;
+    }
+
+    .music-label {
+      color: #9caec8;
+      font-size: 10px;
+      letter-spacing: 1px;
+      margin-top: 18px;
+    }
+
+    .music-label span {
+      color: var(--yellow);
+    }
+
+    .podium-title {
+      font-size: clamp(35px, 9vw, 70px);
+      margin: 15px 0;
+    }
+
+    .podium {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 7px;
+      margin: 35px auto 10px;
+      max-width: 360px;
+    }
+
+    .podium-block {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font: 800 25px "Orbitron", sans-serif;
+      color: var(--navy);
+      position: relative;
+    }
+
+    .podium-block.second {
+      height: 85px;
+      background: #aab5c6;
+    }
+
+    .podium-block.first {
+      height: 125px;
+      background: var(--yellow);
+    }
+
+    .podium-block.third {
+      height: 65px;
+      background: #c77c48;
+    }
+
+    .podium-caption {
+      margin-top: 25px;
+      font: 10px "Orbitron", sans-serif;
+      letter-spacing: 2px;
+      color: var(--muted);
+    }
+
+    .final-line {
+      margin-top: 24px;
+      color: var(--yellow);
+      font: 700 clamp(18px, 4vw, 24px) "Orbitron", sans-serif;
+    }
+
+    .confetti {
+      position: fixed;
+      z-index: 10;
+      width: 8px;
+      height: 13px;
+      top: -20px;
+      pointer-events: none;
+      animation: fall 3.2s linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(760deg);
+        opacity: .15;
+      }
+    }
+
+    .music-control {
+      position: fixed;
+      z-index: 20;
+      bottom: 18px;
+      right: 18px;
+      border: 1px solid rgba(255,255,255,.2);
+      background: rgba(7,19,41,.92);
+      color: white;
+      border-radius: 30px;
+      padding: 10px 13px;
+      font-size: 11px;
+      cursor: pointer;
+      display: none;
+    }
+
+    .music-control.visible {
+      display: block;
+    }
+
+    @media (max-width: 480px) {
+      .screen {
+        padding: 24px 17px;
+      }
+
+      .message {
+        font-size: 13px;
+      }
+
+      .topline {
+        font-size: 8px;
+      }
+
+      .badge {
+        font-size: 8px;
+        padding: 8px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <audio id="birthdayMusic" loop preload="auto">
+    <source src="center-mass.mp3" type="audio/mpeg">
+  </audio>
+
+  <button
+    class="music-control"
+    id="musicControl"
+    type="button"
+    onclick="toggleMusic()"
+    aria-label="Activar o pausar música"
+  >
+    ♪ MUSIC ON
+  </button>
+
+  <section class="screen active" id="intro">
+    <div class="content">
+      <p class="eyebrow">Red Bull Racing · Special transmission</p>
+
+      <h1>
+        LIGHTS<br>
+        <span class="red">OUT.</span>
+      </h1>
+
+      <p class="subtitle">
+        Una transmisión especial está a punto de comenzar.<br>
+        Preparado exclusivamente para George.
+      </p>
+
+      <div class="lights">
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+        <div class="light"></div>
+      </div>
+
+      <p class="tiny-note">SEASON 22 · BIRTHDAY GRAND PRIX</p>
+
+      <button class="button" id="startButton" onclick="startRace()">
+        START YOUR ENGINES →
+      </button>
+
+      <div class="music-label">
+        SOUNDTRACK: <span>TWENTY ONE PILOTS · CENTER MASS</span>
+      </div>
+    </div>
+
+    <div class="stripe"></div>
+  </section>
+
+  <section class="screen" id="birthday">
+    <div class="content">
+      <div class="topline">
+        <span>ORACLE RED BULL RACING</span>
+        <span>DRIVER PROFILE / 022</span>
+      </div>
+
+      <div class="badge">
+        <span class="badge-dot"></span>
+        CADA DÍA MÁS VIEJITO
+      </div>
+
+      <h2 class="birthday-title">
+        HAPPY<br>
+        <span class="red">BIRTHDAY,</span><br>
+        GEORGE.
+      </h2>
+
+      <div class="age">22</div>
+      <p class="laps">22 LAPS AROUND THE SUN</p>
+
+      <div class="car-scene">
+        <div class="car">
+          <div class="halo"></div>
+          <div class="car-wing"></div>
+          <div class="car-body"></div>
+          <div class="car-nose"></div>
+          <div class="wheel left"></div>
+          <div class="wheel right"></div>
+        </div>
+      </div>
+
+      <div class="message-card">
+        <p class="message-label">A NOTE FOR YOU / 22.0</p>
+
+        <p class="message">
+          Georgeee, happy birthday<br><br>
+
+          Espero que hoy te la pases muy bonito y que este
+          nuevo año venga lleno de cosas buenas, muchas
+          alegrías y momentos que te hagan feliz.<br><br>
+
+          Espero que sigas cumpliendo todo lo que te propongas,
+          disfrutando de las cosas que te apasionan y encontrando
+          siempre algo que te emocione. Y, por supuesto, que Max
+          te siga dando muchas alegrías y razones para celebrar
+          cada carrera.<br><br>
+
+          Aunque lo de ser el más veloz creo que ya lo traías
+          de fábrica, así que en eso definitivamente no hay
+          competencia. 🏎️<br><br>
+
+          Me sigue pareciendo muy bonita la casualidad de haber
+          descubierto que teníamos tantas cosas en común.
+          Definitivamente, lo de twins no era cualquier cosa.
+          Fue muy lindo coincidir contigo y encontrar tantas
+          pequeñas cosas que nos hacían parecernos.<br><br>
+
+          Deseo que esta nueva vuelta al sol te traiga
+          experiencias increíbles, personas bonitas, muchos
+          motivos para sonreír y un montón de sueños por cumplir.<br><br>
+
+          <strong>
+            Disfruta mucho tu día.<br>
+            Sigue siendo el más veloz, igual que Max.
+          </strong><br><br>
+
+          <span class="signoff">Twins, forever.</span>
+        </p>
+      </div>
+
+      <p class="music-label">
+        NOW PLAYING: <span>TWENTY ONE PILOTS — CENTER MASS</span>
+      </p>
+
+      <button class="button red-button" onclick="celebrate()">
+        TAKE THE PODIUM →
+      </button>
+    </div>
+
+    <div class="stripe"></div>
+  </section>
+
+  <section class="screen" id="podium">
+    <div class="content">
+      <p class="eyebrow">Grand Prix · Final results</p>
+
+      <h2 class="podium-title">
+        GEORGE<br>
+        <span class="yellow">P1.</span>
+      </h2>
+
+      <p class="subtitle">
+        Level 22 unlocked.<br>
+        Que venga una temporada llena de cosas increíbles.
+      </p>
+
+      <div class="podium">
+        <div class="podium-block second">2</div>
+        <div class="podium-block first">1</div>
+        <div class="podium-block third">3</div>
+      </div>
+
+      <p class="podium-caption">TODAY'S WINNER: GEORGE</p>
+
+      <p class="final-line">LEVEL 22 UNLOCKED</p>
+
+      <p class="subtitle">Una última cosa para recordar:</p>
+
+      <p class="final-line">Twins, forever.</p>
+
+      <button class="button" onclick="restartRace()">
+        REPLAY THE RACE ↻
+      </button>
+    </div>
+
+    <div class="stripe"></div>
+  </section>
+
+  <script>
+    const music = document.getElementById("birthdayMusic");
+    const musicControl = document.getElementById("musicControl");
+    let musicIsPlaying = false;
+    let raceStarted = false;
+
+    function showScreen(screenId) {
+      document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+      });
+
+      document.getElementById(screenId).classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    async function playMusic() {
+      music.volume = 0.35;
+
+      try {
+        await music.play();
+        musicIsPlaying = true;
+        musicControl.textContent = "♪ MUSIC ON";
+      } catch (error) {
+        musicIsPlaying = false;
+        musicControl.textContent = "♪ PLAY MUSIC";
+      }
+
+      musicControl.classList.add("visible");
+    }
+
+    async function startRace() {
+      if (raceStarted) return;
+      raceStarted = true;
+
+      playMusic();
+
+      const lights = document.querySelectorAll(".light");
+      const startButton = document.getElementById("startButton");
+
+      startButton.disabled = true;
+      startButton.textContent = "GET READY...";
+
+      for (let i = 0; i < lights.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, 430));
+        lights[i].classList.add("on");
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 550));
+
+      showScreen("birthday");
+      startButton.disabled = false;
+      startButton.textContent = "START YOUR ENGINES →";
+    }
+
+    function celebrate() {
+      showScreen("podium");
+      launchConfetti();
+    }
+
+    function restartRace() {
+      document.querySelectorAll(".light").forEach(light => {
+        light.classList.remove("on");
+      });
+
+      raceStarted = false;
+      showScreen("intro");
+    }
+
+    async function toggleMusic() {
+      if (musicIsPlaying) {
+        music.pause();
+        musicIsPlaying = false;
+        musicControl.textContent = "♪ PLAY MUSIC";
+      } else {
+        await playMusic();
+      }
+    }
+
+    function launchConfetti() {
+      const colors = ["#ed1738", "#ffd447", "#ffffff", "#5376ad"];
+
+      for (let i = 0; i < 95; i++) {
+        const piece = document.createElement("div");
+        piece.className = "confetti";
+        piece.style.left = Math.random() * 100 + "vw";
+        piece.style.background =
+          colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = Math.random() * 2 + "s";
+        piece.style.animationDuration = 2.5 + Math.random() * 2 + "s";
+        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 5500);
+      }
+    }
+
+    music.addEventListener("ended", () => {
+      musicIsPlaying = false;
+      musicControl.textContent = "♪ PLAY MUSIC";
+    });
+
+    music.addEventListener("error", () => {
+      musicControl.textContent = "♪ AUDIO UNAVAILABLE";
+    });
+  </script>
+</body>
+</html>
